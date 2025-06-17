@@ -106,3 +106,41 @@ uv pip install -r requirements.txt   # install marimo environment & dependencies
 ## Documentation
 
 - See `Master-Project-Description.pdf` and other documents in the `documents/` folder for more details.
+
+
+## Notes More
+- The OKDO box does not work. Licensed, but not the same. boot up, but got stuck in the booting screen and shut down.
+- Buy newest, easy to install OS. Also more ram and computational strength. P3450. carolinn
+- Ethernet does not work, but Eduroam "should" work. Hotspot gives more control over load IP and so on. 
+- use ip config to find IP of laptop
+- first step: for federated learning with object detection. only training. server running on laptop first (serverobj1.py) in federated learning/ base folder. Should be on the same wifi network as Jetson NAno e.g. connected to phone wifi. ipconfig ipv4 address note that down
+- On PC it is 3.11.5, on JN 3.8.10 for python version.
+-  sever listening should show, but it waits for a socket connection. 
+- Location of dataset is hardcoded inside the clientobj1.py file. We need to set BASE_DIR to where the dataset is. 
+- tf_splitter.py and train_val_splitter both kinda do the same thing. the tf_splitter allows for fancy parameters to be given to it in the cmd line, whereas train_val_spli has the params hard coded
+- the test and the validation subsects are combined together, in train_val_split .8 .2 training and validation. VIS has small dataset items, so this is done to make things better. In robotform it should be in the correct form. 
+- MNIST is easy version of object detection. kaggle hojjak dataset includes the files used.
+- object detection is already splitted in three parts. but, we want to fine tune. so, we had to find data base to fine tune it. big datasets don't hvae tfrecord, so use conversions of xml. BUT, issues with mismatching image. Convinced, to one find that is avlaible and possible to down load in tfrecord. SO the coversion required the codes. Pro tip, use tfrecord as priority. easily used by jetson since it used low memory. also, easy to handle in tensorflow. This is more important than a big and better dataset.
+- tfrecord = easy + low computational way
+- pascal vlc dataset was got work, but it was too much to handle for jetson nano
+- MNIST is not tfrecord, but it is OK since it is small. 
+- splitter_tf is the one eventually used. 
+- The split_XX folder is given to the jetson nano or virtual client
+- clientobj1.py is different on the jn and pc. will be moved to the repo. The difference is in how the directory is handled.
+- clientobj1.py in federated learning / base is to be loaded on the JN. line 155 till 162 is different. It is blind to what the dataset is being used, just specify the split_XX folder from splitter_tf.
+- specifically, we use python3 clientobj.py --client_ID 0 where 0 is any integer you want. -> module not found? may require pip3 install psutil -> 7.0.0 installed
+-  base conda environment does not have the packages, but the non virtual has no problem with the packages installed. 
+- The client runner is used to run multiple clients quickly on the server. line32 in the clientrunner is used to specify what the client is to be run on the server. python clientrunner.py 9 where 9 is the number of virtual clients. When the enter is pressed and training is tarted, the clients are added. 
+- in the config.py file, make sure the PRETRAINED_PATH is set to the correct location. For transfer tuning and fine tuning. in some code, it is hard coded so use due diligence. The comments allow selection of which dataset is used. SPLITS_DIR is the folder where the splits are defined.
+- The training starts, when the clients are connected on the jetson nano. CLients on PC done in about 10 seconds. Takes 450 seconds ish to finish all epochs though. The server is waiting for the JN to send its weight. Training is done on the CPU, not the GPU since it is more stable. See comment on line 164 lol.
+- MNIST can be forced on the GPU, but the other two are done on the CPU. lol cpu energy is incorrect. recieving weights is less intensive
+- 1/10 dataset training, then go and average on the fed server, then the fine tuning on the local set again. 
+- the higher it training ahppens, the longer time it takes for each round. Gets warm and toasty. power consumption increases.
+- finger pointing to section which says it is using GPU
+- what they would do different-> using newer JN or laptop / PC to run it
+- jtop is used to get wattage -> lost when trying to run on GPU, also memory errors
+- MNIST is possible on GPU, but the other too is not possible. reverts to using the CPU when the GPU is not able to handle much. 
+- In the JetsonReady folder the clientobj1 is for the virtual clients, called by the client runner. in the base folder, the clientobj1 is for local use on the jetson, this is NOT running on the GPU be default. And try not to run on the GPU either.
+- serverobj1 is for transfer learning. we do the learning on the smaller (?) VIS dataset on the server PC thingy. we trasnfer weights to the clients, and fine tuning is done there with the OOD dataset. clients finish and send wieght back to server and the federated avergae test is done on the server.
+- using something that is not related, can still have impact with trasnfer learning, goals of thesis.
+- server is ran the exact same as the other code in the trasnferlearning_finetuning. it is for fine tuning. config files are in jetson ready. just change the directories for the clients, and the pretrained path and mode. the secomd argument is the number of layers in line 108
