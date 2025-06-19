@@ -48,11 +48,9 @@ This project develops a complete FL pipeline, including model design, client-ser
 
 
 ## Datasets
-- **MNIST Dataset:** [https://git-disl.github.io/GTDLBench/datasets/mnist_datasets/](https://git-disl.github.io/GTDLBench/datasets/mnist_datasets/) - might be some pre-processing involved?
+- **MNIST Dataset:** [https://www.kaggle.com/datasets/hojjatk/mnist-dataset](https://www.kaggle.com/datasets/hojjatk/mnist-dataset)
 - **Outdoor Obstacle Detection (OOD) Dataset:** [https://universe.roboflow.com/fpn/ood-pbnro](https://universe.roboflow.com/fpn/ood-pbnro)
 - **Visually Impaired (VI) Dataset:** [https://universe.roboflow.com/all-mix/visually-impaired-dataset](https://universe.roboflow.com/all-mix/visually-impaired-dataset)
-- [] TODO check datasets tomorrow.
-- File names should be the same in the config files, with what we see in roboflow. 
 
 ## Getting Started
 
@@ -65,9 +63,14 @@ This project develops a complete FL pipeline, including model design, client-ser
 
 ## Requirements
 
-- Python 3.7+
-- TensorFlow, PyTorch, and other dependencies (see script headers or requirements files)
-- Jetson Nano DNN image ([Qengineering/Jetson-Nano-image](https://github.com/Qengineering/Jetson-Nano-image) recommended)
+- Desktop
+    - Python 3.7+
+    - TensorFlow, PyTorch, and other dependencies (should be installed via the virtual environment)
+- nVidia Jetson Nano
+    - Jetson Nano DNN image [Qengineering/Jetson-Nano-image](https://github.com/Qengineering/Jetson-Nano-image) includes most/all dependencies required
+    - WiFi module drivers (if needed)
+- USB device for copying files from PC to Jetson Nano
+- (optional) mobile WiFi hotspot
 
 
 ## Practical Setup Notes
@@ -79,8 +82,7 @@ This project develops a complete FL pipeline, including model design, client-ser
 - **Jetson Nano Hardware Limitations:** The Jetson Nano P3450 (2019) may only support inference (not training) for some algorithms (e.g., YOLO). This limitation motivated the use of the lightweight CNN4 model for training.
 - **Python Package Versions:** The repository's Python scripts do not specify exact package versions. On Jetson Nano DNN, scripts generally run without additional updates (except possibly NumPy) as of June 2025. On Windows 11, use the latest package versions via pip.
 - **Data Format:** The tf.record format is used for importing images from RoboFlow.
-- **Configuration Files:** Configuration files (e.g., `configX.py`) are imported as modules (e.g., `import configX as cfg`) in the main scripts. This allows flexible configuration management for different experiments.
-- Config files in each folder, are for the Python files in each folder. Make sure that they are located next to each other when importing it into it.
+- **Configuration Files:** Configuration files (e.g., `configX.py`) are imported as modules (e.g., `import configX as cfg`) in the main scripts. This allows flexible configuration management for different experiments.Config files in each folder, are for the Python files in each folder. Make sure that they are located next to each other when running code.
 
 ## Set up virtual environment
 It is recommended to use a virtual environment to ensure packages are installed correctly. This ensures the portability of the code across different machines. The `uv` package manager works well for this purpose, and is also suggested by the Marimo project. 
@@ -107,6 +109,9 @@ uv pip install -r requirements.txt   # install marimo environment & dependencies
 
 - See `Master-Project-Description.pdf` and other documents in the `documents/` folder for more details.
 
+
+## Troubleshooting
+- The files used are the same as the links provided in the datasets section. You can check the exact file names refered to for the datasets in the respective config files.
 
 ## Notes More
 - The OKDO box does not work. Licensed, but not the same. boot up, but got stuck in the booting screen and shut down.
